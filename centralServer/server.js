@@ -1,19 +1,17 @@
-var http = require("http");
-var url = require("url")
+var express = require('express'),
+    multer  = require('multer')
 
-function start()
-{
-	function onRequest(request, response)
-	{
-		/*response.writeHead(301,{Location: 'http://127.0.0.1:3000'}
-		);
-		response.end();*/
-		response.writeHead(200, {"Content-Type": "text/plain"});
-		response.write("SSN and Credit Card #: ");
-		response.end();
-	}
-	http.createServer(onRequest).listen(8888, '127.0.0.1');
-	console.log("Server has started.");
-}
+var app = express()
+app.use(multer({ dest: './uploads/'}))
 
-exports.start = start;
+app.get('/', function(req, res){
+  res.send('hello world');
+});
+
+app.post('/', function(req, res){
+    console.log(req.body) // form fields
+    console.log(req.files) // form files
+    res.status(204).end()
+});
+
+app.listen(3000);
