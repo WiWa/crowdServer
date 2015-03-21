@@ -14,5 +14,3 @@ Server synchronizes Client pool by signals, telling an old Client to update itse
 
 Convenience: Frameworks can call deploy to Server S, which then automagically makes the app p2p  
 Security: lolk
-
-
