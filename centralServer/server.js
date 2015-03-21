@@ -3,7 +3,7 @@ var url = require('url')
 var multipart = require('multipart');
 var sys = require('sys');
 
-function start()
+function start(route, handle)
 {
 	function onRequest(request, response)
 	{
@@ -27,7 +27,7 @@ function start()
 		});
 	}
 	http.createServer(onRequest).listen(8888, '127.0.0.1');
-	console.log("Server has started.");
+	console.log("Server has started on 127.0.0.1:8888");
 }
 
 exports.start = start;
