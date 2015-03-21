@@ -1,7 +1,6 @@
 var express=require("express");
 var multer  = require('multer');
 var app = module.exports = express();
-var done=false;
 
 /*Configure the multer.*/
 
@@ -20,6 +19,13 @@ onFileUploadComplete: function (file) {
 
 /*Handling routes.*/
 require('./router.js');
+
+app.post('/upload',function(req,res){
+  if(done==true){
+    //console.log(req.files);
+    res.end("File uploaded.");
+  }
+});
 
 /*Run the server.*/
 app.listen(3000,function(){
