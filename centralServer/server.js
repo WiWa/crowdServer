@@ -1,33 +1,37 @@
-var http = require("http");
-var url = require('url')
-var multipart = require('multipart');
-var sys = require('sys');
+var express=require("express");
+var multer  = require('multer');
+var app=express();
+var done=false;
 
-function start(route, handle)
-{
-	function onRequest(request, response)
-	{
-		/*response.writeHead(301,{Location: 'http://127.0.0.1:3000'}
-		);
-		response.end();*/
-		//response.writeHead(200, {"Content-Type": "text/plain"});
-		//response.write("SSN and Credit Card #: ");
-		//response.end();
-		var postData = "";
-		var pathname = url.parse(request.url).pathname;
-		console.log("Request for " + pathname + " received.");
-		request.setEncoding("utf8");
-		request.addListener("data", function(postDataChunk) {
-			postData += postDataChunk;
-			console.log("Received POST data chunk '"+
-			postDataChunk + "'.");
-		});
-		request.addListener("end", function() {
-			route(handle, pathname, response, postData);
-		});
-	}
-	http.createServer(onRequest).listen(8888, '127.0.0.1');
-	console.log("Server has started on 127.0.0.1:8888");
+/*Configure the multer.*/
+
+app.use(multer({ dest: './uploads/',
+ rename: function (fieldname, filename) {
+    return filename+Date.now();
+  },
+onFileUploadStart: function (file) {
+  console.log(file.originalname + ' is starting ...')
+},
+onFileUploadComplete: function (file) {
+  console.log(file.fieldname + ' uploaded to  ' + file.path)
+  done=true;
 }
+}));
 
-exports.start = start;
+/*Handling routes.*/
+
+app.get('/',function(req,res){
+      res.sendfile("index.html");
+});
+
+app.post('/api/photo',function(req,res){
+  if(done==true){
+    //console.log(req.files);
+    res.end("File uploaded.");
+  }
+});
+
+/*Run the server.*/
+app.listen(3000,function(){
+    console.log("Working on port 3000");
+});
