@@ -1,4 +1,4 @@
 var server = require("./server");
-var client = require("./client");
+var client = require("./clients");
 
 server.start();
