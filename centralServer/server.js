@@ -38,6 +38,14 @@ var clientSchema = mongoose.Schema({
 	busy: Boolean
 })  //reference to a Schema and definition of client
 var Client = mongoose.model('Client', clientSchema)  //compile Schema into a model
+
+var appSchema = mongoose.Schema({
+  name: String,
+  clientele: Array
+})  //Reference to a Schema and definition of app
+var App = mongoose.model('App', appSchema)  //compile Schema into a model
+
+
 function makeClient(host, port) {
 	var client1 = new Client({host: host, port: port, busy: false})
 	client1.save(function(err) {
@@ -45,29 +53,61 @@ function makeClient(host, port) {
 	}) //save to database
 }
 
-makeClient("1.1.1.1", "9000")
-Client.findOne({busy:false}, function(err, ret){console.log(ret)})
-//console.log(ret)
 
-var appSchema = mongoose.Schema({
-	name: String,
-	clientele: Array
-})  //Reference to a Schema and definition of app
-var App = mongoose.model('App', appSchema)  //compile Schema into a model
-function makeApp() {
-  var name = "" //TBD
+function makeApp(name) {
   var clientele = [] //will represent array of clients that have been delegated the app	
   App.findOne({name: name}, function(err, appFound) {
+    console.log('nigeri')
     //find app in database  if not found, create new app object and save to database
-    if(appFound == null) {
-      var app1 = new App({name: name, clientele: clientele}) 
-      app1.save(function(err, app1) {
-        if(err) return console.error(err)
-      })
+    if(!appFound) {
+      console.log("cunt")
+      Client.findOne({busy: false}, function(err, clients) {
+        var app1 = new App({name: name, clientele: [clients]}) 
+        console.log(app1)
+        app1.save(function(err, app1) {
+          if(err){
+            console.error(err)
+          } 
+        })
+      })      
     }
-    Client.findOne({busy: false}, function(err, clients) {
-      var clientele[0] = clients[0]
-    }) //find all clients that are not busy
   })
 
+}
+
+Client.remove({},function(){
+  // Fake Client OP
+  makeClient("1.1.1.1", "9000")
+  Client.findOne({busy:false}, function(err, ret){console.log(ret)})
+})
+App.remove({},function(){
+  // Fake App OP
+  makeApp("myapp")
+})
+
+
+
+app.get('/:app_name', function(req, res){
+  App.findOne({name: req.params.app_name}, function(err, appFound){
+    if(!err && appFound){
+      var deploy_to = appFound['clientele'].shift()
+      var loc = deploy_to['host']+':'+deploy_to['port']
+      Client.update({_id: deploy_to._id}, {$set: { busy: true } }, function(err, client){
+        res.redirect('/client/'+loc)
+      })
+    }
+    else{
+      console.error(err)
+    }
+  })
+})
+
+app.get('/client/:loc', function(req, res){
+  console.log(req.params.loc)
+  res.redirect("http://www.google.com")
+})
+
+function resRedirect(res, loc){
+  res.redirect(302, loc)
+  console.log("wtf son")
 }
