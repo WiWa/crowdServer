@@ -151,7 +151,7 @@ io.on('connection', function(socket) {
 
   makeClient(address, client_port, socket.id)
 
-  socket.on(''+address, function (from, msg) {
+  socket.on('127.0.0.1', function (from, msg) {
     if(typeof msg != String && msg[0] == 'download'){
       socket.emit(''+'127.0.0.1', ip, 'Sending File')
     }
