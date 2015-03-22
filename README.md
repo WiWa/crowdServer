@@ -1,5 +1,5 @@
 # crowdServer
-p2p application hosting. Hopefully written in node.
+p2p application hosting. Hopefully written in node. Made for VandyHacks 2015!
   
 ###Goals:  
 Function  
