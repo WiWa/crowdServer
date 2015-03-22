@@ -93,11 +93,15 @@ function makeApp(name, index, path) {
         console.log(app1)
         
         var deploy_to = app1['clientele'].shift()
-        
-        console.log(deploy_to.socket)
         io.sockets.connected[deploy_to.socket].emit('127.0.0.1', "Central Server", ['deploy', app1.name, app1.index])
 
         app1.save(function(err, app1) {
+          if(err){
+            console.error(err)
+          } 
+        })
+        deploy_to.busy = true
+        deploy_to.save(function(err, deploy_to){
           if(err){
             console.error(err)
           } 
