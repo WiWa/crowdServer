@@ -20,4 +20,4 @@ function extract_deploy(tgz, appName, index){
   }) 
 }
   
-exports.extract_deploy = extract_deploy
+//exports.extract_deploy = extract_deploy
