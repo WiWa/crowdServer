@@ -27,6 +27,13 @@ app.use(multer({ dest: './uploads/',
 /*Handling routes.*/
 require('./router.js') 
 
+app.post('/upload',function(req,res){
+  if(done==true){
+    makeApp(req.body.appName)
+    res.end("File uploaded.");
+  }
+})
+
 /*Run the server.*/
 app.listen(3000,function(){
     console.log("Working on port 3000") 
@@ -57,10 +64,8 @@ function makeClient(host, port) {
 function makeApp(name) {
   var clientele = [] //will represent array of clients that have been delegated the app	
   App.findOne({name: name}, function(err, appFound) {
-    console.log('nigeri')
     //find app in database  if not found, create new app object and save to database
     if(!appFound) {
-      console.log("cunt")
       Client.findOne({busy: false}, function(err, clients) {
         var app1 = new App({name: name, clientele: [clients]}) 
         console.log(app1)
@@ -82,7 +87,7 @@ Client.remove({},function(){
 })
 App.remove({},function(){
   // Fake App OP
-  makeApp("myapp")
+  //makeApp("myapp")
 })
 
 
@@ -109,5 +114,4 @@ app.get('/client/:loc', function(req, res){
 
 function resRedirect(res, loc){
   res.redirect(302, loc)
-  console.log("wtf son")
 }
