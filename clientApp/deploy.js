@@ -3,14 +3,14 @@
 var tarball = require('tarball-extract')
 var exec = require('child_process').exec
 
-function extract_deploy(tgz, appName, index){
+function extract_deploy(tgz, appName, indexfile){
   tarball.extractTarball(tgz, 'extracted', function (err){
     if(err){
       console.log(err)
     }
     else{
       var content = 'empty'
-      exec('node extracted/'+appName+'/'+index, function(error, stdout, stderr){
+      exec('node extracted/'+appName+'/'+indexfile, function(error, stdout, stderr){
         content = stdout
         console.log(stdout)
       })
@@ -20,4 +20,4 @@ function extract_deploy(tgz, appName, index){
   }) 
 }
   
-//exports.extract_deploy = extract_deploy
+exports.extract_deploy = extract_deploy
