@@ -21,7 +21,9 @@ onFileUploadComplete: function (file) {
 /*Handling routes.*/
 
 app.get('/',function(req,res){
-      res.sendfile("index.html");
+	//res.writeHead(301, {'Location':'127.0.0.1:8000'});
+	res.redirect('http://www.google.com');
+    res.sendfile("index.html");
 });
 
 app.post('/api/photo',function(req,res){
