@@ -14,7 +14,7 @@ function extract_deploy(tgz, appName, indexfile){
         content = stdout
         console.log(stdout)
       })
-      console.log("Maybe Deploying?")
+      console.log("Deployed!")
       return content
     }
   }) 

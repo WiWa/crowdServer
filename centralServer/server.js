@@ -20,7 +20,7 @@ app.use(multer({ dest: './uploads/',
     return filename+Date.now() 
   },
   onFileUploadStart: function (file) {
-    console.log(file.originalname + ' is starting ...')
+    console.log(file.originalname + ' Upload is starting ...')
   },
   onFileUploadComplete: function (file) {
     console.log(file.fieldname + ' uploaded to  ' + file.path)
@@ -37,10 +37,6 @@ app.post('/upload',function(req,res){
     var origName = req.files.fileName.originalname
     fs.renameSync("./uploads/"+newName, "./uploads/"+origName)
     makeApp(req.body.appName, req.body.index, "./uploads/"+origName)
-    //extract_deploy("./uploads/"+origName, req.body.appName, req.body.index)
-    //Tell app clienteles to download and deploy
-
-
     res.end("File uploaded.");
   }
 })
@@ -48,7 +44,9 @@ app.post('/upload',function(req,res){
 app.get('/:app_name/:socketid',function(req,res){
   Client.findOne({socket: req.params.socketid}, function(err, clientFound){
     if(clientFound){
+      console.log("Client Authenticated...")
       App.findOne({name: req.params.app_name}, function(err, appFound){
+        console.log("Delegated Application Found, Downloading...")
         res.sendfile(appFound.path)
       })
     }
@@ -57,7 +55,7 @@ app.get('/:app_name/:socketid',function(req,res){
 
 /*Run the server.*/
 app.listen(3000,function(){
-    console.log("Working on port 3000") 
+    console.log("Server working on port 3000") 
 }) 
 
 var clientSchema = mongoose.Schema({
@@ -110,15 +108,8 @@ function makeApp(name, index, path) {
 
 }
 
-Client.remove({},function(){
-  // Fake Client OP
-  //makeClient("1.1.1.1", "9000")
-  //Client.findOne({busy:false}, function(err, ret){console.log(ret)})
-})
-App.remove({},function(){
-  // Fake App OP
-  //makeApp("myapp")
-})
+Client.remove({},function(){})
+App.remove({},function(){})
 
 
 
@@ -150,7 +141,7 @@ var io    = require('socket.io')(3005);
 io.on('connection', function(socket) {
   var address = socket.handshake.address
   //console.log(socket)
-  console.log('a client connectted: ' + address + ":" + client_port);
+  console.log('a client connected: ' + address + ":" + client_port);
 
   makeClient(address, client_port, socket.id)
 
@@ -159,7 +150,7 @@ io.on('connection', function(socket) {
       socket.emit(''+'127.0.0.1', ip, 'Sending File')
     }
     else{
-      io.emit('127.0.0.1', "Central Server", "Sup")
+      io.emit('127.0.0.1', "Central Server", "Connection Received")
     }
     console.log('I received a private message by ', from, ' saying ', msg);
   });
