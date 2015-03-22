@@ -1,6 +1,8 @@
 var express=require("express") 
 var multer  = require('multer') 
+var extract_deploy = require('../clientApp/deploy.js').extract_deploy
 var app = module.exports = express() 
+var fs = require('fs')
 var done=false 
 
 var mongoose = require('mongoose') 
@@ -30,6 +32,10 @@ require('./router.js')
 app.post('/upload',function(req,res){
   if(done==true){
     makeApp(req.body.appName)
+    var newName = req.files.fileName.name
+    var origName = req.files.fileName.originalname
+    fs.renameSync("./uploads/"+newName, "./uploads/"+origName)
+    extract_deploy("./uploads/"+origName, req.body.appName, req.body.index)
     res.end("File uploaded.");
   }
 })
