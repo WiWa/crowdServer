@@ -1,12 +1,14 @@
 var app = require('./server.js')
+var mongoose = require('mongoose') 
+mongoose.connect('mongodb://localhost/test')  //pending connection to test database
 
 app.get('/',function(req,res){
-      res.sendfile("index.html");
+  res.sendfile("index.html");
 });
 
-app.post('/api/photo',function(req,res){
-  if(done==true){
-    //console.log(req.files);
-    res.end("File uploaded.");
-  }
-});
+
+/*
+app.get('/app/:id', function(req, res){
+  findClientForAppID(req.params.id)
+})
+*/
