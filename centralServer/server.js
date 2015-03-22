@@ -29,7 +29,9 @@ app.use(multer({ dest: './uploads/',
 })) 
 
 /*Handling routes.*/
-require('./router.js') 
+app.get('/',function(req,res){
+  res.sendfile("index.html");
+});
 
 app.post('/upload',function(req,res){
   if(done==true){
