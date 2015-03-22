@@ -6,18 +6,12 @@ var fs = require('fs')
 var done=false 
 client_port = 4000
 
-var mongoose = require('mongoose') 
+var mongoose = require("mongoose") 
 mongoose.connect('mongodb://localhost/test')  //pending connection to test database
 var db = mongoose.connection 
 db.on('error', console.error.bind(console, 'connection error:')) 
 db.once('open', function (callback) {})  //test if connection is successful
 
-var mongoose = require(‘mongoose’);
-mongoose.connect(‘mongo db://localhost/test’); //pending connection to test database
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function (callback) {
-}); //test if connection is successful
 
 /*Configure the multer.*/
 
