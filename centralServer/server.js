@@ -3,6 +3,7 @@ var multer  = require('multer')
 var app = module.exports = express() 
 var fs = require('fs')
 var done=false 
+client_port = 4000
 
 var mongoose = require('mongoose') 
 mongoose.connect('mongodb://localhost/test')  //pending connection to test database
@@ -121,3 +122,25 @@ app.get('/client/:loc', function(req, res){
 function resRedirect(res, loc){
   res.redirect(302, loc)
 }
+
+
+
+var io    = require('socket.io')(3005);
+//var clientPort = 3001;
+
+io.on('connection', function(socket) {
+  var address = socket.handshake.address
+  //console.log(socket)
+  console.log('a client connectted: ' + address + ":" + client_port);
+
+  makeClient(address, client_port)
+
+  socket.on(''+address, function (from, msg) {
+    console.log('I received a private message by ', from, ' saying ', msg);
+    io.emit('127.0.0.1', "Central Server", "Sup")
+  });
+
+  socket.on('disconnect', function () {
+    io.emit('user disconnected');
+  });
+});
